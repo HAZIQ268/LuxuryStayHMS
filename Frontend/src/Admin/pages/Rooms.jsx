@@ -19,8 +19,8 @@ export default function Rooms() {
       const res = await api.get("/rooms");
       setRooms(res.data);
     } catch (e) {
-      alert("Error fetching rooms",e);
-    } 
+      alert("Error fetching rooms", e);
+    }
   }
 
   async function addRoom(e) {

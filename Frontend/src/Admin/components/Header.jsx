@@ -2,9 +2,8 @@ import React, { useEffect } from "react";
 
 function Header() {
   useEffect(() => {
-    // ✅ Ensure Bootstrap dropdowns and tooltips work only inside admin layout
     import("bootstrap/dist/js/bootstrap.bundle.min.js").then(() => {
-      console.log("✅ Admin Bootstrap initialized safely");
+      console.log("Admin Bootstrap initialized safely");
     });
 
 
@@ -19,14 +18,10 @@ function Header() {
       <div className="header-content">
         <nav className="navbar navbar-expand">
           <div className="collapse navbar-collapse justify-content-between">
-            {/* 🔹 Left Section */}
             <div className="header-left">
               <div className="dashboard_bar">Dashboard</div>
             </div>
-
-            {/* 🔹 Right Section */}
             <ul className="navbar-nav header-right">
-              {/* 🔍 Search Box */}
               <li className="nav-item">
                 <div className="input-group search-area">
                   <input
@@ -39,8 +34,6 @@ function Header() {
                   </span>
                 </div>
               </li>
-
-              {/* ☀️🌙 Theme Switch */}
               <li className="nav-item dropdown notification_dropdown">
                 <button className="nav-link bell dz-theme-mode" title="Switch Theme">
                   <i id="icon-light" className="fas fa-sun"></i>
@@ -48,7 +41,6 @@ function Header() {
                 </button>
               </li>
 
-              {/* 💬 Messages */}
               <li className="nav-item dropdown notification_dropdown">
                 <button className="nav-link bell-link ai-icon">
                   <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
@@ -63,7 +55,6 @@ function Header() {
                 </button>
               </li>
 
-              {/* 🔔 Notifications */}
               <li className="nav-item dropdown notification_dropdown">
                 <button
                   className="nav-link ai-icon"
@@ -86,7 +77,7 @@ function Header() {
                 </div>
               </li>
 
-              {/* ❤️ Activity */}
+
               <li className="nav-item dropdown notification_dropdown">
                 <button
                   className="nav-link ai-icon"
@@ -104,7 +95,7 @@ function Header() {
                 </button>
               </li>
 
-              {/* 👤 Profile Dropdown */}
+
               <li className="nav-item dropdown header-profile">
                 <button
                   className="nav-link d-flex align-items-center"

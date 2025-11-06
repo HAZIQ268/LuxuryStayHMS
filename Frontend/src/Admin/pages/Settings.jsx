@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api"; // ✅ Make sure api.js is set correctly
+import api from "../../services/api"; //  Make sure api.js is set correctly
 
 export default function Settings() {
   const [settings, setSettings] = useState({ tax_rate: 0.0, policies: "" });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  // ✅ Fetch saved settings
+  //  Fetch saved settings
   useEffect(() => {
     async function fetchSettings() {
       try {
         const res = await api.get("/settings");
         setSettings(res.data);
       } catch (err) {
-        console.error("❌ Error fetching settings:", err);
+        console.error("Error fetching settings:", err);
         setMessage("Error loading settings");
       } finally {
         setLoading(false);
@@ -22,13 +22,13 @@ export default function Settings() {
     fetchSettings();
   }, []);
 
-  // ✅ Save settings
+  //  Save settings
   const save = async (e) => {
     e.preventDefault();
     setMessage("");
     try {
       const res = await api.post("/settings", settings);
-      setMessage("✅ Settings saved successfully!");
+      setMessage(" Settings saved successfully!");
       setSettings(res.data.settings);
     } catch (err) {
       console.error(err);
@@ -36,14 +36,14 @@ export default function Settings() {
     }
   };
 
-  // ✅ Reset to default values (also saves in DB)
+
   const resetDefaults = async () => {
     if (!window.confirm("Are you sure you want to reset settings to default?"))
       return;
     try {
       const res = await api.post("/settings/reset");
       setSettings(res.data.settings);
-      setMessage("✅ Settings reset to default values!");
+      setMessage(" Settings reset to default values!");
     } catch (err) {
       console.error("❌ Reset error:", err);
       setMessage("Error resetting settings");

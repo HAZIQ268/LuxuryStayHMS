@@ -20,8 +20,8 @@ export default function Users() {
       const res = await api.get("/users");
       setUsers(res.data);
     } catch (err) {
-      alert("Error fetching users",err);
-    } 
+      alert("Error fetching users", err);
+    }
   }
 
   async function createUser(e) {
@@ -47,7 +47,7 @@ export default function Users() {
       await api.delete(`/users/${id}`);
       fetchUsers();
     } catch (err) {
-      alert("Delete failed",err);
+      alert("Delete failed", err);
     }
   }
 
