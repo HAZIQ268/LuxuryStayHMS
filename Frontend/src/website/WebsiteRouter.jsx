@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import WebsiteLayout from "./WebsiteLayout";
 
-// ✅ Website Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Rooms from "./pages/Rooms";
@@ -10,8 +9,6 @@ import RoomDetails from "./pages/RoomDetails";
 import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
 import Feedback from "./pages/Feedback";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Amenities from "./pages/Amenities";
 import Location from "./pages/Location";
 import RoomDetail from "./pages/RoomDetail";
@@ -47,8 +44,7 @@ function WebsiteRouter() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/feedback" element={<Feedback />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      
       </Route>
     </Routes>
   );

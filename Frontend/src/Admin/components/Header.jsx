@@ -1,17 +1,24 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate(); // ✅ FIX: Added this line
+
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap.bundle.min.js").then(() => {
       console.log("Admin Bootstrap initialized safely");
     });
-
 
     return () => {
       const dropdowns = document.querySelectorAll(".dropdown-menu.show");
       dropdowns.forEach((dd) => dd.classList.remove("show"));
     };
   }, []);
+
+  function logout() {
+    localStorage.clear();
+    navigate("/login"); // ✅ navigate now works
+  }
 
   return (
     <div className="header admin-header">
@@ -21,7 +28,9 @@ function Header() {
             <div className="header-left">
               <div className="dashboard_bar">Dashboard</div>
             </div>
+
             <ul className="navbar-nav header-right">
+              {/* 🔍 Search */}
               <li className="nav-item">
                 <div className="input-group search-area">
                   <input
@@ -34,6 +43,8 @@ function Header() {
                   </span>
                 </div>
               </li>
+
+              {/* 🌙 Theme Switch */}
               <li className="nav-item dropdown notification_dropdown">
                 <button className="nav-link bell dz-theme-mode" title="Switch Theme">
                   <i id="icon-light" className="fas fa-sun"></i>
@@ -41,6 +52,7 @@ function Header() {
                 </button>
               </li>
 
+              {/* 🔔 Notifications */}
               <li className="nav-item dropdown notification_dropdown">
                 <button className="nav-link bell-link ai-icon">
                   <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
@@ -55,6 +67,7 @@ function Header() {
                 </button>
               </li>
 
+              {/* 🔔 More Notifications Dropdown */}
               <li className="nav-item dropdown notification_dropdown">
                 <button
                   className="nav-link ai-icon"
@@ -77,12 +90,9 @@ function Header() {
                 </div>
               </li>
 
-
+              {/* ❤️ Favorites */}
               <li className="nav-item dropdown notification_dropdown">
-                <button
-                  className="nav-link ai-icon"
-                  data-bs-toggle="dropdown"
-                >
+                <button className="nav-link ai-icon" data-bs-toggle="dropdown">
                   <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
                     <path
                       fillRule="evenodd"
@@ -95,7 +105,7 @@ function Header() {
                 </button>
               </li>
 
-
+              {/* 👤 Profile Dropdown */}
               <li className="nav-item dropdown header-profile">
                 <button
                   className="nav-link d-flex align-items-center"
@@ -115,7 +125,7 @@ function Header() {
                 </button>
 
                 <div className="dropdown-menu dropdown-menu-end">
-                  <a href="/app-profile" className="dropdown-item ai-icon">
+                  <a href="/admin/profile" className="dropdown-item ai-icon">
                     <i className="fas fa-user text-primary"></i>
                     <span className="ms-2">Profile</span>
                   </a>
@@ -123,10 +133,10 @@ function Header() {
                     <i className="fas fa-inbox text-success"></i>
                     <span className="ms-2">Inbox</span>
                   </a>
-                  <a href="/login" className="dropdown-item ai-icon">
+                  <button onClick={logout} className="dropdown-item ai-icon">
                     <i className="fas fa-sign-out-alt text-danger"></i>
                     <span className="ms-2">Logout</span>
-                  </a>
+                  </button>
                 </div>
               </li>
             </ul>

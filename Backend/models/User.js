@@ -3,15 +3,20 @@ const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  role: { type: String, enum: ['admin','manager','receptionist','housekeeping','guest'], required: true },
+  role: { 
+    type: String, 
+    enum: ['admin','manager','receptionist','housekeeping','guest'], 
+    required: true 
+  },
   email: { type: String, required: true, unique: true },
   password: { type: String },
   contact: { type: String },
+  image: { type: String, default: '' },
   preferences: { type: Object, default: {} },
   status: { type: String, enum: ['active','inactive'], default: 'active' }
 }, { timestamps: true });
 
-// password hashing
+// Hash password
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   if (!this.password) return next();
@@ -20,9 +25,11 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// Compare password
 userSchema.methods.comparePassword = function(candidate) {
-  const bcrypt = require('bcryptjs');
   return bcrypt.compare(candidate, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);
+
+

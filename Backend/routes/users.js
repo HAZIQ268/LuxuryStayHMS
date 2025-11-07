@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// ✅ Register user (admin or manager can create staff)
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role, contact, status } = req.body;
@@ -20,7 +19,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// ✅ Login
+
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -46,7 +45,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// ✅ Get all users (admin only)
+
 router.get('/', async (req, res) => {
   try {
     const users = await User.find();
@@ -56,7 +55,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Delete user
+
 router.delete('/:id', async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);

@@ -19,16 +19,12 @@ function Sidebar() {
     <div className="deznav">
       <div className="deznav-scroll">
         <ul className="metismenu" id="menu">
-
-          {/* Dashboard */}
           <li>
             <a className="has-arrow ai-icon" href="/admin/" aria-expanded="false">
               <FaTachometerAlt className="me-2" />
               <span className="nav-text">Dashboard</span>
             </a>
           </li>
-
-          {/* Users */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaUsers className="me-2" />
@@ -38,8 +34,6 @@ function Sidebar() {
               <li><Link to="/admin/users">All Users</Link></li>
             </ul>
           </li>
-
-          {/* Rooms */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaBed className="me-2" />
@@ -49,8 +43,6 @@ function Sidebar() {
               <li><Link to="/admin/rooms">Room List</Link></li>
             </ul>
           </li>
-
-          {/* Bookings */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaCalendarAlt className="me-2" />
@@ -61,7 +53,6 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Billing */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaCreditCard className="me-2" />
@@ -72,7 +63,6 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Housekeeping */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaBroom className="me-2" />
@@ -83,7 +73,6 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Maintenance */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaTools className="me-2" />
@@ -94,7 +83,6 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Feedback */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaComments className="me-2" />
@@ -105,7 +93,7 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Services */}
+    
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaConciergeBell className="me-2" />
@@ -116,7 +104,6 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Reports */}
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaFileAlt className="me-2" />
@@ -127,7 +114,7 @@ function Sidebar() {
             </ul>
           </li>
 
-          {/* Settings */}
+   
           <li>
             <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
               <FaCog className="me-2" />
@@ -139,7 +126,7 @@ function Sidebar() {
           </li>
         </ul>
 
-        {/* Footer / Copyright */}
+   
         <div className="copyright">
           <p><strong>Innap Hotel Admin</strong> © 2025 All Rights Reserved</p>
           <p className="fs-12">Made with <span className="heart"></span> by DexignZone</p>
