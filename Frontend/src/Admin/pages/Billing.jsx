@@ -29,7 +29,7 @@ export default function Billing() {
   async function createOrUpdateBill(e) {
     e.preventDefault();
     try {
-      console.log("Submitting form:", form); // ✅ helpful debug
+      console.log("Submitting form:", form); 
       if (editingId) {
         await api.put(`/bills/${editingId}`, form);
         alert("Bill updated successfully");

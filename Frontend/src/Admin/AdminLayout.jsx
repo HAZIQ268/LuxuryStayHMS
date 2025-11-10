@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
@@ -17,6 +17,7 @@ import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
 function AdminLayout() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const assetsLoaded = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -31,8 +32,6 @@ function AdminLayout() {
       }
     };
 
-    //   Helper: dynamically load JS
-
     const loadScript = (src) =>
       new Promise((resolve, reject) => {
         if (document.querySelector(`script[src="${src}"]`)) return resolve();
@@ -45,9 +44,6 @@ function AdminLayout() {
         document.body.appendChild(script);
       });
 
-   
-    //  Initialize date/time picker
-    
     const initDatetimepicker = () => {
       try {
         if ($("#datetimepicker").length) {
@@ -56,65 +52,63 @@ function AdminLayout() {
         $(".booking-calender .fa.fa-clock-o")
           .removeClass("fa-clock-o")
           .addClass("fa-clock");
-        // console.log(" Datetimepicker initialized.");
       } catch (e) {
         console.warn("Datetimepicker init failed:", e);
       }
     };
 
-  
-      // Load all assets + initialize
-    
-    (async () => {
+    const initializeAssets = async () => {
       try {
-     
         loadCSS("/admin/css/style.css");
         loadCSS("/admin/vendor/chartist/css/chartist.min.css");
         loadCSS("/admin/vendor/jquery-nice-select/css/nice-select.css");
         loadCSS("/admin/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css");
-        // loadCSS("/admin/icons/flaticon/flaticon.css"); 
-        // loadCSS("/admin/icons/flaticon_1/flaticon_1.css"); 
-        await loadScript("/admin/vendor/global/global.min.js");
-        await loadScript("/admin/vendor/jquery-nice-select/js/jquery.nice-select.min.js");
-        await loadScript("/admin/vendor/chart.js/Chart.bundle.min.js");
-        await loadScript("/admin/vendor/peity/jquery.peity.min.js");
-        await loadScript("/admin/vendor/apexchart/apexchart.js");
-        await loadScript("/admin/vendor/bootstrap-datetimepicker/js/moment.js");
-        await loadScript("/admin/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js");
-        await loadScript("/admin/js/custom.min.js");
-        await loadScript("/admin/js/deznav-init.js");
-        await loadScript("/admin/js/styleSwitcher.js");
+
+        if (!assetsLoaded.current) {
+          await loadScript("/admin/vendor/global/global.min.js");
+          await loadScript("/admin/vendor/jquery-nice-select/js/jquery.nice-select.min.js");
+          await loadScript("/admin/vendor/chart.js/Chart.bundle.min.js");
+          await loadScript("/admin/vendor/peity/jquery.peity.min.js");
+          await loadScript("/admin/vendor/apexchart/apexchart.js");
+          await loadScript("/admin/vendor/bootstrap-datetimepicker/js/moment.js");
+          await loadScript("/admin/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js");
+          await loadScript("/admin/js/custom.min.js");
+          await loadScript("/admin/js/deznav-init.js");
+          await loadScript("/admin/js/styleSwitcher.js");
+          assetsLoaded.current = true;
+        }
 
         if (location.pathname === "/admin" || location.pathname === "/admin/dashboard") {
           await loadScript("/admin/js/dashboard/dashboard-1.js");
         }
 
-        $(document).ready(() => {
-          if ($.fn.niceSelect) {
+        // Small delay for DOM ready + plugin init
+        setTimeout(() => {
+          if ($ && $.fn && $.fn.niceSelect) {
             $("select").niceSelect();
-            console.log("niceSelect initialized.");
-          } else {
-            console.warn("niceSelect plugin not found!");
+            console.log("niceSelect initialized");
           }
           initDatetimepicker();
-        });
-
-        // console.log("All admin assets loaded successfully.");
+        }, 100);
       } catch (err) {
         console.error("Admin asset load error:", err);
       } finally {
-        setTimeout(() => {
-          if (isMounted) setLoading(false);
-        }, 1500);
+        if (isMounted) setLoading(false);
       }
-    })();
+    };
+
+    // Load once
+    if (!assetsLoaded.current) {
+      initializeAssets();
+    } else {
+      setLoading(false);
+      setTimeout(() => {
+        if ($ && $.fn && $.fn.niceSelect) $("select").niceSelect();
+      }, 50);
+    }
 
     return () => {
       isMounted = false;
-      document
-        .querySelectorAll("link[data-admin], script[data-admin]")
-        .forEach((el) => el.remove());
-      console.log("Cleaned admin assets on unmount.");
     };
   }, [location.pathname]);
 
@@ -128,6 +122,7 @@ function AdminLayout() {
           justifyContent: "center",
           alignItems: "center",
           background: "#f9fafb",
+          transition: "opacity 0.3s ease",
         }}
       >
         <div
@@ -141,18 +136,27 @@ function AdminLayout() {
     );
   }
 
-
   return (
-    <div id="main-wrapper" className="show">
+    <div id="main-wrapper" className="show fade-in" style={{ animation: "fadeIn 0.3s ease" }}>
       <NavHeader />
       <Header />
       <Sidebar />
       <ChatBox />
-      <div className="content-body">
+      <div className="content-body fade-in">
         <div className="container-fluid">
           <Outlet />
         </div>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .fade-in {
+          animation: fadeIn 0.4s ease;
+        }
+      `}</style>
     </div>
   );
 }

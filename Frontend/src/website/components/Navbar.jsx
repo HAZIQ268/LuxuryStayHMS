@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 function Navbar() {
   useEffect(() => {
-    // ✅ Mobile nav toggle logic (Bootstrap-independent)
+    // Mobile nav toggle logic
     const mobileToggle = document.querySelector(".mobile-nav-toggle");
     const navMenu = document.querySelector("#navmenu");
 
@@ -91,7 +91,7 @@ function Navbar() {
               </li>
             </ul>
 
-            {/* ✅ Mobile nav toggle button */}
+            {/* Mobile nav toggle button */}
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
         </div>

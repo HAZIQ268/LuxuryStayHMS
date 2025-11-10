@@ -6,7 +6,7 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  //  Fetch saved settings
+  //  Fetch settings
   useEffect(() => {
     async function fetchSettings() {
       try {
@@ -32,7 +32,7 @@ export default function Settings() {
       setSettings(res.data.settings);
     } catch (err) {
       console.error(err);
-      setMessage("❌ Error saving settings");
+      setMessage("Error saving settings");
     }
   };
 

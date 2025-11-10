@@ -8,7 +8,7 @@ const BookingSchema = new mongoose.Schema({
   check_out: { type: Date, required: true },
   status: {
     type: String,
-    enum: ["reserved", "checked_in", "checked_out", "cancelled"],
+    enum: ["reserved", "checked_in", "checked_out", "cancelled"], // ✅ match logic
     default: "reserved",
   },
   payment_status: {

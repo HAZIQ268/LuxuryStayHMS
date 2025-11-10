@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Housekeeping = require("../models/Housekeeping");
 
-// ✅ Create new housekeeping task
+
+// Create new  
 router.post("/", async (req, res) => {
   try {
     const { task_id, room_id, staff_id, date, status } = req.body;
@@ -14,7 +15,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Get all housekeeping tasks
+// Get all housekeeping 
 router.get("/", async (req, res) => {
   try {
     const tasks = await Housekeeping.find();
@@ -24,7 +25,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Update housekeeping task (mark as completed, etc.)
+// Update housekeeping 
 router.put("/:id", async (req, res) => {
   try {
     const updated = await Housekeeping.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -35,7 +36,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ Delete housekeeping task
+// Delete housekeeping 
 router.delete("/:id", async (req, res) => {
   try {
     await Housekeeping.findByIdAndDelete(req.params.id);

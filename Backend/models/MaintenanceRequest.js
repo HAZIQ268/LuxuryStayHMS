@@ -4,7 +4,7 @@ const maintenanceRequestSchema = new mongoose.Schema(
   {
     request_id: { type: Number, required: true },
     room_id: { type: Number, required: true },
-    reported_by: { type: String, default: "" }, // changed to String to avoid ObjectId errors
+    reported_by: { type: String, default: "" }, 
     issue: { type: String, required: true },
     reported_date: { type: Date, default: Date.now },
     status: { type: String, enum: ["pending", "resolved"], default: "pending" },

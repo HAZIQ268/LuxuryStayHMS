@@ -1,25 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./signin_css/login-register.css";
-import { FaEnvelope, FaLock, FaUserTag, FaSpinner } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUserTag, FaSpinner, FaEye, FaEyeSlash } from "react-icons/fa";
+import AuthContext from "../context/AuthContext";
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    role: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "", role: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,11 +25,22 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      alert(`Login successful! Welcome ${res.data.user.name}`);
-      navigate("/admin/profile");
+      const { email, password, role } = formData;
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password, role },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      login(res.data);
+
+      const userRole = res.data.user.role || role;
+
+      if (userRole === "admin") navigate("/admin/dashboard");
+      else if (userRole === "manager") navigate("/manager/dashboard");
+      else if (userRole === "receptionist") navigate("/reception/dashboard");
+      else if (userRole === "housekeeping") navigate("/housekeeping/dashboard");
+      else navigate("/user/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");
     } finally {
@@ -57,52 +66,60 @@ export default function Login() {
           <form onSubmit={handleSubmit}>
             {error && <p className="error-msg">{error}</p>}
 
+            {/* Email */}
             <div className="form-group">
               <label>Email Address</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <FaEnvelope className="icon" />
+              <div className="input-wrapper">
+                <FaEnvelope className="envelope-icon" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
+            {/* Password */}
             <div className="form-group">
               <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-              />
-              <FaLock className="icon" />
+              <div className="input-wrapper">
+                {/* <FaLock className="icon" /> */}
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <span className="eye-icon" onClick={toggleShowPassword}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </div>
 
+            {/* Role */}
             <div className="form-group">
               <label>Role</label>
-              <select
-                name="role"
-                required
-                value={formData.role}
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Select your role
-                </option>
-                <option value="admin">Administrator</option>
-                <option value="manager">Manager</option>
-                <option value="receptionist">Receptionist</option>
-                <option value="housekeeping">Housekeeping</option>
-                <option value="guest">Guest</option>
-              </select>
-              <FaUserTag className="icon" />
+              <div className="input-wrapper">
+                <FaUserTag className="role-icon" />
+                <select name="role" required value={formData.role} onChange={handleChange}>
+                  <option value="" disabled>
+                    Select your role
+                  </option>
+                  <option value="admin">Administrator</option>
+                  <option value="manager">Manager</option>
+                  <option value="receptionist">Receptionist</option>
+                  <option value="housekeeping">Housekeeping</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
             </div>
 
+            {/* Submit */}
             <button type="submit" className="btn pulse" disabled={loading}>
               {loading ? (
                 <>
@@ -115,8 +132,7 @@ export default function Login() {
 
             <div className="form-footer">
               <p>
-                Don’t have an account?{" "}
-                <a href="/register">Register as Guest</a>
+                Don’t have an account? <a href="/register">User Register</a>
               </p>
             </div>
           </form>

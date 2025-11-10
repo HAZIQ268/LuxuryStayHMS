@@ -1,4 +1,3 @@
-// utils/emailService.js
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -6,14 +5,14 @@ const transporter = nodemailer.createTransport({
   port: Number(process.env.EMAIL_PORT) || 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER || "test@example.com",
+    user: process.env.EMAIL_USER || "luxurystayhospitality@gmail.com",
     pass: process.env.EMAIL_PASS || "password",
   },
 });
 
 async function sendInvoiceEmail(to, subject, text, attachmentPath, attachmentName) {
   const mailOptions = {
-    from: process.env.EMAIL_USER || "test@example.com",
+    from: process.env.EMAIL_USER || "luxurystayhospitality@gmail.com",
     to,
     subject,
     text,

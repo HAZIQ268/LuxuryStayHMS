@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Feedback = require("../models/Feedback");
 
-// ✅ CREATE
+
+// CREATE
 router.post("/", async (req, res) => {
   try {
     const { feedback_id, guest_id, rating, comment } = req.body;
@@ -25,7 +26,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ READ ALL
+// READ ALL
 router.get("/", async (req, res) => {
   try {
     const feedbacks = await Feedback.find().sort({ createdAt: -1 });
@@ -35,7 +36,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ READ ONE
+// READ ONE
 router.get("/:id", async (req, res) => {
   try {
     const feedback = await Feedback.findById(req.params.id);
@@ -46,7 +47,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ✅ UPDATE
+// UPDATE
 router.put("/:id", async (req, res) => {
   try {
     const updated = await Feedback.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -57,7 +58,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ DELETE
+// DELETE
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Feedback.findByIdAndDelete(req.params.id);

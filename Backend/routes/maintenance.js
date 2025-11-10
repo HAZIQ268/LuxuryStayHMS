@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const MaintenanceRequest = require("../models/MaintenanceRequest");
 
-// ✅ CREATE
+
+// CREATE
 router.post("/", async (req, res) => {
   try {
     const { request_id, room_id, reported_by, issue, status, priority } = req.body;
@@ -28,7 +29,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ READ ALL
+// READ ALL
 router.get("/", async (req, res) => {
   try {
     const requests = await MaintenanceRequest.find().sort({ createdAt: -1 });
@@ -39,7 +40,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ READ ONE
+// READ ONE
 router.get("/:id", async (req, res) => {
   try {
     const request = await MaintenanceRequest.findById(req.params.id);
@@ -50,7 +51,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ✅ UPDATE
+// UPDATE
 router.put("/:id", async (req, res) => {
   try {
     const updated = await MaintenanceRequest.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -62,7 +63,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ DELETE
+// DELETE
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await MaintenanceRequest.findByIdAndDelete(req.params.id);

@@ -6,7 +6,8 @@ const { generateInvoice } = require("../utils/pdfGenerator");
 const { sendInvoiceEmail } = require("../utils/emailService");
 const path = require("path");
 
-// ✅ CREATE bill
+
+// CREATE bill
 router.post("/", async (req, res) => {
   try {
     const { bill_id, booking_id, guest_id, room_charges, services, total } = req.body;
@@ -22,7 +23,7 @@ router.post("/", async (req, res) => {
       room_charges: room_charges || 0,
       services: services || [],
       total: total || room_charges || 0,
-      payment_status: "Pending", // ✅ fixed casing
+      payment_status: "Pending", 
     });
 
     await bill.save();
@@ -33,7 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ READ all bills
+// READ all bills
 router.get("/", async (req, res) => {
   try {
     const bills = await Bill.find();
@@ -43,7 +44,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ UPDATE bill
+// UPDATE bill
 router.put("/:id", async (req, res) => {
   try {
     const bill = await Bill.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -54,7 +55,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ DELETE bill
+// DELETE bill
 router.delete("/:id", async (req, res) => {
   try {
     const bill = await Bill.findByIdAndDelete(req.params.id);
@@ -65,7 +66,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// ✅ GENERATE INVOICE PDF + optional email
+// GENERATE INVOICE PDF + optional email
 
 router.post("/:id/generate-invoice", async (req, res) => {
   try {

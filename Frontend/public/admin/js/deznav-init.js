@@ -1,61 +1,37 @@
-"use strict"
+/* global jQuery, dezSettings */
 
-var dezSettingsOptions = {};
+"use strict";
 
-function getUrlParams(dParam) {
-    var dPageURL = window.location.search.substring(1),
-        dURLVariables = dPageURL.split('&'),
-        dParameterName,
-        i;
+(function ($) {
+  "use strict";
 
-    for (i = 0; i < dURLVariables.length; i++) {
-        dParameterName = dURLVariables[i].split('=');
+  var dezSettingsOptions = {
+    typography: "poppins",
+    version: "light",
+    layout: "vertical",
+    primary: "color_1",
+    headerBg: "color_1",
+    navheaderBg: "color_1",
+    sidebarBg: "color_1",
+    sidebarStyle: "full",
+    sidebarPosition: "fixed",
+    headerPosition: "fixed",
+    containerLayout: "full",
+  };
 
-        if (dParameterName[0] === dParam) {
-            return dParameterName[1] === undefined ? true : decodeURIComponent(dParameterName[1]);
-        }
-    }
-}
-
-(function($) {
-
-    "use strict"
-
-    /* var direction =  getUrlParams('dir');
-	
-	if(direction == 'rtl')
-	{
-        direction = 'rtl'; 
-    }else{
-        direction = 'ltr'; 
-    } */
-
-    dezSettingsOptions = {
-        typography: "poppins",
-        version: "light",
-        layout: "vertical",
-        primary: "color_1",
-        headerBg: "color_1",
-        navheaderBg: "color_1",
-        sidebarBg: "color_1",
-        sidebarStyle: "full",
-        sidebarPosition: "fixed",
-        headerPosition: "fixed",
-        containerLayout: "full",
-    };
-
-
-
-
+  // Initialize settings only if the class is defined
+  if (typeof dezSettings !== "undefined") {
     new dezSettings(dezSettingsOptions);
+  } else {
+    console.warn("dezSettings is not defined. Make sure custom.min.js is loaded.");
+  }
 
-    jQuery(window).on('resize', function() {
-        /*Check container layout on resize */
-        ///alert(dezSettingsOptions.primary);
-        dezSettingsOptions.containerLayout = $('#container_layout').val();
-        /*Check container layout on resize END */
-
-        new dezSettings(dezSettingsOptions);
-    });
-
+  // Handle layout update on resize
+  $(window).on("resize", function () {
+    if (typeof dezSettings !== "undefined") {
+      var layoutValue = $("#container_layout").val() || "full";
+      dezSettingsOptions.containerLayout = layoutValue;
+      new dezSettings(dezSettingsOptions);
+    }
+  });
 })(jQuery);

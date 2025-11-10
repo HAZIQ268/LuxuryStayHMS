@@ -15,11 +15,13 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Fetch dashboard data dynamically
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/api/dashboard/stats");
+        const res = await axios.get("http://localhost:5000/api/dashboard/stats", {
+          withCredentials: true,
+        });
+
         setStats({
           newBookings: res.data.newBookings || 0,
           scheduledRooms: res.data.scheduledRooms || 0,
@@ -31,7 +33,7 @@ function Dashboard() {
         });
         setLoading(false);
       } catch (err) {
-        console.error("Failed to load dashboard stats:", err);
+        console.error("❌ Failed to load dashboard stats:", err);
         setError("Failed to load dashboard data");
         setLoading(false);
       }
@@ -39,7 +41,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // 🧩 Stat Card with Icon
+  // Stat Card with Icon
   const StatCard = ({ title, value, gradient, icon }) => (
     <div className="col-xl-3 col-sm-6">
       <div className={`card ${gradient} card-bx`}>
@@ -54,7 +56,7 @@ function Dashboard() {
     </div>
   );
 
-  // 🌀 Loading state
+  //  Loading
   if (loading)
     return (
       <div className="text-center py-5">
@@ -65,7 +67,7 @@ function Dashboard() {
       </div>
     );
 
-  // ❌ Error state
+  // Error
   if (error)
     return (
       <div className="text-center py-5 text-danger">
@@ -186,7 +188,9 @@ function Dashboard() {
                       />
                       <div>
                         <h6 className="mb-0">{r.name}</h6>
-                        <small className="text-muted">{r.date}</small>
+                        <small className="text-muted">
+                          {new Date(r.createdAt || Date.now()).toLocaleDateString()}
+                        </small>
                       </div>
                       <ul className="star-review ms-auto">
                         {[...Array(5)].map((_, j) => (

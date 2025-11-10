@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   role: { 
     type: String, 
-    enum: ['admin','manager','receptionist','housekeeping','guest'], 
+    enum: ['admin','manager','receptionist','housekeeping','user'], 
     required: true 
   },
   email: { type: String, required: true, unique: true },
@@ -16,20 +16,18 @@ const userSchema = new mongoose.Schema({
   status: { type: String, enum: ['active','inactive'], default: 'active' }
 }, { timestamps: true });
 
-// Hash password
+
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  if (!this.password) return next();
+  if (!this.isModified('password') || !this.password) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-// Compare password
-userSchema.methods.comparePassword = function(candidate) {
-  return bcrypt.compare(candidate, this.password);
+
+userSchema.methods.comparePassword = function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);
-
 

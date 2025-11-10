@@ -16,25 +16,6 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
-/* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-} */
-/* 
-body {
-    background-color: var(--background-color);
-    color: var(--default-color);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-}
-  */
 .auth-page .background-animation {
     position: absolute;
     top: 0;
@@ -356,3 +337,32 @@ body {
         padding: 10px;
     }
 }
+
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .icon {
+  position: absolute;
+  left: 12px;
+  color: #888;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 10px 40px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.eye-icon, .user-icon , .envelope-icon,.role-icon {
+  position: absolute;
+  right: 12px;
+  color: #888;
+  cursor: pointer;
+}
+

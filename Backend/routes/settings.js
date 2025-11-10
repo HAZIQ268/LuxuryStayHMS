@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Settings = require("../models/Settings");
 
+
 /**
- * ✅ Get current settings
+ * Get current settings
  */
 router.get("/", async (req, res) => {
   try {
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * ✅ Save/update settings
+ * Save/update settings
  */
 router.post("/", async (req, res) => {
   try {
@@ -46,7 +47,7 @@ router.post("/", async (req, res) => {
 });
 
 /**
- * ✅ Reset settings to defaults
+ * Reset settings to defaults
  */
 router.post("/reset", async (req, res) => {
   try {

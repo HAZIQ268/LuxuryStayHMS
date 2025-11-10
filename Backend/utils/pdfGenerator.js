@@ -1,11 +1,9 @@
-// utils/pdfGenerator.js
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 
 function generateInvoice(bill, guest, cb) {
   try {
-    // ✅ Ensure tmp folder exists
     const tmpDir = path.join(__dirname, "..", "tmp");
     if (!fs.existsSync(tmpDir)) {
       fs.mkdirSync(tmpDir);
@@ -18,7 +16,7 @@ function generateInvoice(bill, guest, cb) {
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
 
-    // ✅ Generate simple invoice
+    // Generate simple invoice
     doc.fontSize(20).text("LuxuryStay Hospitality", { align: "center" });
     doc.moveDown();
     doc.fontSize(12).text(`Invoice ID: ${bill.bill_id}`);
@@ -36,7 +34,6 @@ function generateInvoice(bill, guest, cb) {
     doc.text("Thanks for staying with us!", { align: "center" });
     doc.end();
 
-    // ✅ When writing finishes, callback fires
     stream.on("finish", () => cb(null, filePath, filename));
     stream.on("error", (err) => cb(err));
   } catch (err) {

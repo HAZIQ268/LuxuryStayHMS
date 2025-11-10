@@ -10,7 +10,7 @@ export default function Profile() {
     const [imageFile, setImageFile] = useState(null);
     const navigate = useNavigate();
 
-    // ✅ Fetch user profile
+    // Fetch user profile
     const fetchProfile = useCallback(async () => {
         try {
             const res = await api.get("/auth/profile");
@@ -29,7 +29,7 @@ export default function Profile() {
         fetchProfile();
     }, [fetchProfile]);
 
-    // ✅ Handle image preview
+    //  image preview
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setImageFile(file);
@@ -38,7 +38,7 @@ export default function Profile() {
         }
     };
 
-    // ✅ Handle profile update
+    // profile update
     async function handleUpdate(e) {
         e.preventDefault();
         try {

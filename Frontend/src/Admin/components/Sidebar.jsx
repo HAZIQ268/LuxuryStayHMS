@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { 
+import React, { useContext } from "react";
+import { Link, useParams } from "react-router-dom";
+import {
   FaTachometerAlt,
   FaUsers,
   FaBed,
@@ -11,125 +11,74 @@ import {
   FaComments,
   FaConciergeBell,
   FaFileAlt,
-  FaCog
+  FaCog,
 } from "react-icons/fa";
+import AuthContext from "../../context/AuthContext";
 
 function Sidebar() {
+  const { user } = useContext(AuthContext);
+  const { role: routeRole } = useParams(); // URL se role fetch
+  const role = user?.role || routeRole || "user";
+
+  const menuConfig = {
+    admin: [
+      { icon: <FaTachometerAlt />, label: "Dashboard", path: `/${role}/dashboard` },
+      { icon: <FaUsers />, label: "Users", path: `/${role}/users` },
+      { icon: <FaBed />, label: "Rooms", path: `/${role}/rooms` },
+      { icon: <FaCalendarAlt />, label: "Bookings", path: `/${role}/bookings` },
+      { icon: <FaCreditCard />, label: "Billing", path: `/${role}/billing` },
+      { icon: <FaBroom />, label: "Housekeeping", path: `/${role}/housekeeping` },
+      { icon: <FaTools />, label: "Maintenance", path: `/${role}/maintenance` },
+      { icon: <FaComments />, label: "Feedback", path: `/${role}/feedback` },
+      { icon: <FaConciergeBell />, label: "Services", path: `/${role}/services` },
+      { icon: <FaFileAlt />, label: "Reports", path: `/${role}/reports` },
+      { icon: <FaCog />, label: "Settings", path: `/${role}/settings` },
+    ],
+    manager: [
+      { icon: <FaTachometerAlt />, label: "Dashboard", path: `/${role}/dashboard` },
+      { icon: <FaCalendarAlt />, label: "Bookings", path: `/${role}/bookings` },
+      { icon: <FaBed />, label: "Rooms", path: `/${role}/rooms` },
+      { icon: <FaComments />, label: "Feedback", path: `/${role}/feedback` },
+      { icon: <FaFileAlt />, label: "Reports", path: `/${role}/reports` },
+    ],
+    housekeeping: [
+      { icon: <FaTachometerAlt />, label: "Dashboard", path: `/${role}/dashboard` },
+      { icon: <FaBroom />, label: "Tasks", path: `/${role}/housekeeping` },
+      { icon: <FaTools />, label: "Maintenance", path: `/${role}/maintenance` },
+    ],
+    receptionist: [
+      { icon: <FaTachometerAlt />, label: "Dashboard", path: `/${role}/dashboard` },
+      { icon: <FaCalendarAlt />, label: "Bookings", path: `/${role}/bookings` },
+      { icon: <FaUsers />, label: "Guests", path: `/${role}/users` },
+      { icon: <FaConciergeBell />, label: "Services", path: `/${role}/services` },
+    ],
+    user: [
+      { icon: <FaTachometerAlt />, label: "Dashboard", path: `/${role}/dashboard` },
+      { icon: <FaCalendarAlt />, label: "My Bookings", path: `/${role}/bookings` },
+      { icon: <FaComments />, label: "Feedback", path: `/${role}/feedback` },
+      { icon: <FaCog />, label: "Profile", path: `/${role}/profile` },
+    ],
+  };
+
+  const userMenu = menuConfig[role] || menuConfig.user;
+
   return (
     <div className="deznav">
       <div className="deznav-scroll">
         <ul className="metismenu" id="menu">
-          <li>
-            <a className="has-arrow ai-icon" href="/admin/" aria-expanded="false">
-              <FaTachometerAlt className="me-2" />
-              <span className="nav-text">Dashboard</span>
-            </a>
-          </li>
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaUsers className="me-2" />
-              <span className="nav-text">Users</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/users">All Users</Link></li>
-            </ul>
-          </li>
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaBed className="me-2" />
-              <span className="nav-text">Rooms</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/rooms">Room List</Link></li>
-            </ul>
-          </li>
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaCalendarAlt className="me-2" />
-              <span className="nav-text">Bookings</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/bookings">All Bookings</Link></li>
-            </ul>
-          </li>
-
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaCreditCard className="me-2" />
-              <span className="nav-text">Billing</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/billing">All Bills</Link></li>
-            </ul>
-          </li>
-
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaBroom className="me-2" />
-              <span className="nav-text">Housekeeping</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/housekeeping">View Tasks</Link></li>
-            </ul>
-          </li>
-
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaTools className="me-2" />
-              <span className="nav-text">Maintenance</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/maintenance">All Reports</Link></li>
-            </ul>
-          </li>
-
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaComments className="me-2" />
-              <span className="nav-text">Feedback</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/feedback">View Feedback</Link></li>
-            </ul>
-          </li>
-
-    
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaConciergeBell className="me-2" />
-              <span className="nav-text">Services</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/services">All Services</Link></li>
-            </ul>
-          </li>
-
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaFileAlt className="me-2" />
-              <span className="nav-text">Reports</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/reports">View Reports</Link></li>
-            </ul>
-          </li>
-
-   
-          <li>
-            <a className="has-arrow ai-icon" href="javascript:void(0)" aria-expanded="false">
-              <FaCog className="me-2" />
-              <span className="nav-text">Settings</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><Link to="/admin/settings">Settings</Link></li>
-            </ul>
-          </li>
+          {userMenu.map((item, i) => (
+            <li key={i}>
+              <Link to={item.path} className="ai-icon" aria-expanded="false">
+                {item.icon}
+                <span className="nav-text ms-2">{item.label}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
 
-   
         <div className="copyright">
-          <p><strong>Innap Hotel Admin</strong> © 2025 All Rights Reserved</p>
-          <p className="fs-12">Made with <span className="heart"></span> by DexignZone</p>
+          <p><strong>LuxuryStay HMS</strong> © 2025 All Rights Reserved</p>
+          <p className="fs-12">Made with ❤️ by Haziq</p>
         </div>
       </div>
     </div>

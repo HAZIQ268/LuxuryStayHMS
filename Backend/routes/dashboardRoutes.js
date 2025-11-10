@@ -1,38 +1,40 @@
 const express = require("express");
+const Booking = require("../models/Booking");
+const Room = require("../models/Room");
+const Review = require("../models/Review");
+
+
 const router = express.Router();
 
 router.get("/stats", async (req, res) => {
   try {
-    // Replace these with real DB queries
-    const stats = {
-      newBookings: 872,
-      scheduledRooms: 285,
-      checkIns: 53,
-      checkOuts: 78,
-      availableRooms: 785,
-      bookedRooms: { pending: 234, done: 65, finish: 763 },
-      reviews: [
-        {
-          name: "Ali Muzair",
-          stars: 4,
-          date: "2025-11-04",
-          comment: "Excellent service!",
-          avatar: "/admin-images/avatar/1.jpg",
-        },
-        {
-          name: "Chintya Clara",
-          stars: 3,
-          date: "2025-11-03",
-          comment: "Good but can improve.",
-        },
-      ],
+    const newBookings = await Booking.countDocuments({ status: "reserved" });
+    const scheduledRooms = await Room.countDocuments({ status: "occupied" });
+    const checkIns = await Booking.countDocuments({ status: "checked_in" });
+    const checkOuts = await Booking.countDocuments({ status: "checked_out" });
+    const availableRooms = await Room.countDocuments({ status: "available" });
+
+    const bookedRooms = {
+      pending: await Booking.countDocuments({ payment_status: "pending" }),
+      done: await Booking.countDocuments({ payment_status: "paid" }),
+      finish: await Booking.countDocuments({ payment_status: "refunded" }),
     };
 
-    res.json(stats);
-  } catch (err) {
-    console.error("Dashboard stats error:", err);
-    res.status(500).json({ error: "Failed to load dashboard data" });
+    const reviews = await Review.find().sort({ createdAt: -1 }).limit(5);
+
+    res.json({
+      newBookings,
+      scheduledRooms,
+      checkIns,
+      checkOuts,
+      availableRooms,
+      bookedRooms,
+      reviews,
+    });
+  } catch (error) {
+    console.error("Dashboard error:", error);
+    res.status(500).json({ message: "Failed to load dashboard stats" });
   }
 });
 
-module.exports = router; // ✅ CommonJS export
+module.exports = router;

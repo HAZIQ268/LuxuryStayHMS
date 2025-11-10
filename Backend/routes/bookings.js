@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../models/Booking");
 
-// ✅ CREATE booking
+// CREATE booking
 router.post("/", async (req, res) => {
   try {
     const { booking_id, guest_id, room_id, check_in, check_out, status, payment_status } = req.body;
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ READ all bookings
+// READ all bookings
 router.get("/", async (req, res) => {
   try {
     const { status, guest_id } = req.query;
@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ UPDATE booking
+// UPDATE booking
 router.put("/:id", async (req, res) => {
   try {
     const updatedBooking = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -58,7 +58,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ DELETE booking
+// DELETE booking
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Booking.findByIdAndDelete(req.params.id);

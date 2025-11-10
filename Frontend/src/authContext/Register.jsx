@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./signin_css/login-register.css"; // your scoped CSS
-import { FaEnvelope, FaLock, FaUser, FaUserTag, FaSpinner } from "react-icons/fa";
+import "./signin_css/login-register.css";
+import { FaEnvelope, FaUser, FaSpinner, FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -10,36 +10,45 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    contact: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
-    if (formData.password !== formData.confirmPassword)
+    if (formData.password !== formData.confirmPassword) {
       return setError("Passwords do not match!");
+    }
 
     setLoading(true);
+
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        contact: formData.contact,
-        role: "guest",
       });
-      alert("Registration successful! Please login.");
-      navigate("/login");
+
+      setSuccess(res.data.message || "Registration successful!");
+      setLoading(false);
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
-    } finally {
+      setError(err.response?.data?.message || "Registration failed!");
       setLoading(false);
     }
   };
@@ -53,78 +62,84 @@ export default function Register() {
       </div>
 
       <div className="container">
-        <div className="register-card">
-          <div className="register-header">
+        <div className="login-card">
+          <div className="login-header">
             <h2>Create Your Account</h2>
-            <p>Register to get started with your dashboard</p>
+            <p>Register to access the Hotel Management System</p>
           </div>
 
           <form onSubmit={handleSubmit}>
             {error && <p className="error-msg">{error}</p>}
+            {success && <p className="success-msg">{success}</p>}
 
+            {/* Name */}
             <div className="form-group">
               <label>Full Name</label>
-              <input
-                type="text"
-                name="name"
-                placeholder="Enter your full name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <FaUser className="icon" />
+              <div className="input-wrapper">
+                <FaUser className="user-icon" />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Enter your full name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
+            {/* Email */}
             <div className="form-group">
               <label>Email Address</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <FaEnvelope className="icon" />
+              <div className="input-wrapper">
+                <FaEnvelope className="envelope-icon" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
+            {/* Password */}
             <div className="form-group">
               <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Create a password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-              />
-              <FaLock className="icon" />
+              <div className="input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  autoComplete="new-password"
+                />
+                <span className="eye-icon" onClick={toggleShowPassword}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </div>
 
+            {/* Confirm Password */}
             <div className="form-group">
               <label>Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm your password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-              <FaLock className="icon" />
-            </div>
-
-            <div className="form-group">
-              <label>Contact Number</label>
-              <input
-                type="text"
-                name="contact"
-                placeholder="Enter your phone number"
-                required
-                value={formData.contact}
-                onChange={handleChange}
-              />
-              <FaUserTag className="icon" />
+              <div className="input-wrapper">
+       
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Confirm your password"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                <span className="eye-icon" onClick={toggleShowPassword}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </div>
 
             <button type="submit" className="btn pulse" disabled={loading}>
@@ -133,13 +148,13 @@ export default function Register() {
                   <FaSpinner className="spin" /> Creating Account...
                 </>
               ) : (
-                "Create Account"
+                "Register"
               )}
             </button>
 
             <div className="form-footer">
               <p>
-                Already have an account? <a href="/login">Login here</a>
+                Already have an account? <a href="/login">Login</a>
               </p>
             </div>
           </form>

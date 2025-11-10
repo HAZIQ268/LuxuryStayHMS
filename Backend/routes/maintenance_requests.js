@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const MaintenanceRequest = require("../models/MaintenanceRequest");
 
-// ✅ Create new maintenance request
+
+// Create new 
 router.post("/", async (req, res) => {
   try {
     const { request_id, room_id, reported_by, issue, reported_date, status } = req.body;
@@ -23,7 +24,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Get all maintenance requests
+// Get all 
 router.get("/", async (req, res) => {
   try {
     const requests = await MaintenanceRequest.find();
@@ -33,7 +34,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Update maintenance request status
+// Update maintenance
 router.put("/:id", async (req, res) => {
   try {
     const updated = await MaintenanceRequest.findByIdAndUpdate(
@@ -48,7 +49,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ Delete maintenance request
+// Delete 
 router.delete("/:id", async (req, res) => {
   try {
     await MaintenanceRequest.findByIdAndDelete(req.params.id);

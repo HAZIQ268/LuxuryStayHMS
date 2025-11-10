@@ -20,7 +20,7 @@ import Events from "./pages/Events";
 function WebsiteRouter() {
   const location = useLocation();
 
-  // 🧹 Remove admin scripts/styles when entering website
+  // Remove admin scripts/styles when entering website
   useEffect(() => {
     document
       .querySelectorAll('link[href*="/admin"], script[src*="/admin"]')

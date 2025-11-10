@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Room = require('../models/Room');
 
+
 // Create room
 router.post('/', async (req, res) => {
   try {

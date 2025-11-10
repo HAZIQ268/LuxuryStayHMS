@@ -21,20 +21,17 @@ import PureCounter from "@srexi/purecounterjs";
 
 function WebsiteLayout() {
   useEffect(() => {
-    // ✅ Remove any admin assets that might leak
+    // Remove admin assets
     document.querySelectorAll('link[data-admin], script[data-admin]').forEach((el) => el.remove());
 
-    // ✅ AOS Animations
     AOS.init({
       duration: 800,
       easing: "ease-in-out",
       once: true,
     });
 
-    // ✅ GLightbox
     GLightbox({ selector: ".glightbox" });
 
-    // ✅ Swiper
     new Swiper(".swiper", {
       loop: true,
       speed: 600,
@@ -42,17 +39,15 @@ function WebsiteLayout() {
       pagination: { el: ".swiper-pagination", clickable: true },
     });
 
-    // ✅ Counter
     new PureCounter();
 
-    // ✅ Isotope for gallery
     const grid = document.querySelector(".isotope-container");
     if (grid) {
       const iso = new Isotope(grid, { itemSelector: ".isotope-item" });
       imagesLoaded(grid, () => iso.layout());
     }
 
-    console.log("✅ Website scripts initialized");
+    console.log("Website scripts initialized");
   }, []);
 
   return (

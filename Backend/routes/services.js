@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Service = require("../models/Service");
 
-// ✅ Create new service
+// Create new service
 router.post("/", async (req, res) => {
   try {
     const { service_id, guest_id, service_type, details, status } = req.body;
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Get all
+// Get all
 router.get("/", async (req, res) => {
   try {
     const services = await Service.find().sort({ createdAt: -1 });
@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Update (edit)
+// Update (edit)
 router.put("/:id", async (req, res) => {
   try {
     const updated = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -44,7 +44,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ Delete
+// Delete
 router.delete("/:id", async (req, res) => {
   try {
     await Service.findByIdAndDelete(req.params.id);
