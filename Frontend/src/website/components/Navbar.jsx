@@ -86,7 +86,7 @@ function Navbar() {
               <li>
                 <NavLink to="/feedback" className={({ isActive }) => (isActive ? "active" : "")}>Feedback</NavLink>
               </li>
-<<<<<<< HEAD
+
               <li className="ms-3 d-flex gap-2">
                 <Link
                   to="/login"
@@ -109,11 +109,10 @@ function Navbar() {
                 </Link>
               </li>
 
-=======
               <li className="ms-3">
                 <Link to="/login" className="btn btn-dark btn-sm px-3 py-2">Login</Link>
               </li>
->>>>>>> 8827b4a2a5941c255419ff885ed9608508ea0366
+
             </ul>
 
             {/* Mobile nav toggle button */}
