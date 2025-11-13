@@ -8,4 +8,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <App />
   </AuthProvider>
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> 8827b4a2a5941c255419ff885ed9608508ea0366

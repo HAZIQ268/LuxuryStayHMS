@@ -4,13 +4,17 @@ const api = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
+<<<<<<< HEAD
 // ✅ Attach token if logged in
+=======
+>>>>>>> 8827b4a2a5941c255419ff885ed9608508ea0366
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
+<<<<<<< HEAD
 // ✅ Prevent unwanted redirects for website guest
 api.interceptors.response.use(
   (response) => response,
@@ -52,6 +56,11 @@ export default api;
 // export default api;
 
 
+=======
+export default api;
+
+
+>>>>>>> 8827b4a2a5941c255419ff885ed9608508ea0366
 
 
 

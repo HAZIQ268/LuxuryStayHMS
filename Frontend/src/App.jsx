@@ -10,6 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+<<<<<<< HEAD
         {/* 🌐 Public Website (Guest + Logged Users) */}
         <Route path="/*" element={<WebsiteRouter />} />
 
@@ -54,6 +55,20 @@ function App() {
           path="/user/*"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
+=======
+        {/* Public Website */}
+        <Route path="/*" element={<WebsiteRouter />} />
+
+        {/* Auth Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Single Admin Layout for All Roles */}
+        <Route
+          path="/:role/*"
+          element={
+            <ProtectedRoute>
+>>>>>>> 8827b4a2a5941c255419ff885ed9608508ea0366
               <AdminRoutes />
             </ProtectedRoute>
           }
@@ -63,5 +78,9 @@ function App() {
   );
 }
 
+<<<<<<< HEAD
 export default App;
 
+=======
+export default App;
+>>>>>>> 8827b4a2a5941c255419ff885ed9608508ea0366
