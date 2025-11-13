@@ -11,24 +11,29 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem("token") || null);
   const [isGuest, setIsGuest] = useState(() => localStorage.getItem("guest") === "true");
 
+  // ✅ Login function
   const login = (data) => {
     setUser(data.user);
     setToken(data.token);
     setIsGuest(false);
+
     localStorage.setItem("user", JSON.stringify(data.user));
     localStorage.setItem("token", data.token);
     localStorage.removeItem("guest");
   };
 
+  // ✅ Logout function
   const logout = () => {
     setUser(null);
     setToken(null);
     setIsGuest(false);
+
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("guest");
   };
 
+  // ✅ Continue as guest
   const continueAsGuest = () => {
     setUser(null);
     setToken(null);
@@ -36,12 +41,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("guest", "true");
   };
 
+  // ✅ Persist guest flag if active
   useEffect(() => {
-    if (isGuest) localStorage.setItem("guest", "true");
+    if (isGuest) {
+      localStorage.setItem("guest", "true");
+    }
   }, [isGuest]);
 
   return (
-    <AuthContext.Provider value={{ user, token, isGuest, login, logout, continueAsGuest }}>
+    <AuthContext.Provider
+      value={{ user, token, isGuest, login, logout, continueAsGuest }}
+    >
       {children}
     </AuthContext.Provider>
   );

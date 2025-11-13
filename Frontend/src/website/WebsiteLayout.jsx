@@ -26,6 +26,7 @@ import PureCounter from "@srexi/purecounterjs";
 
 function WebsiteLayout() {
   useEffect(() => {
+
     document
       .querySelectorAll('link[data-admin], script[data-admin]')
       .forEach((el) => el.remove());
@@ -58,8 +59,8 @@ function WebsiteLayout() {
     }
 
 
-
     console.log("Website scripts initialized");
+
   }, []);
 
   return (
@@ -68,8 +69,6 @@ function WebsiteLayout() {
       <main id="main-content">
         <Outlet />
       </main>
-
-
       <AutoPopupModal /> {/* 🆕 This shows the popup */}
 
       <Footer />

@@ -109,10 +109,6 @@ function Navbar() {
                 </Link>
               </li>
 
-              <li className="ms-3">
-                <Link to="/login" className="btn btn-dark btn-sm px-3 py-2">Login</Link>
-              </li>
-
             </ul>
 
             {/* Mobile nav toggle button */}
