@@ -13,6 +13,7 @@ import Services from "./pages/Services";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
+import PermissionsPage from "./pages/PermissionsPage";
 
 function AdminRoutes() {
   const location = useLocation();
@@ -30,6 +31,7 @@ function AdminRoutes() {
       <Route path="/" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="permissions" element={<PermissionsPage />} />
         <Route path="users" element={<Users />} />
         <Route path="profile" element={<Profile />} />
         <Route path="bookings" element={<Bookings />} />

@@ -84,21 +84,18 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password, role } = req.body;
 
-   
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-    // Compare password using model method
     const match = await user.comparePassword(password);
     if (!match) return res.status(400).json({ message: "Invalid credentials" });
 
     if (role && user.role !== role) {
-      return res
-        .status(403)
-        .json({ message: `You are not authorized as ${role}. Please select the correct role.` });
+      return res.status(403).json({
+        message: `You are not authorized as ${role}.`,
+      });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -115,6 +112,7 @@ router.post("/login", async (req, res) => {
         role: user.role,
         contact: user.contact,
         image: user.image,
+        permissions: user.permissions || [], // ⭐ FIXED
       },
     });
   } catch (err) {

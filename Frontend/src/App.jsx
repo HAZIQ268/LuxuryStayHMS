@@ -35,7 +35,7 @@ function App() {
           }
         />
         <Route
-          path="/receptionist/*"
+          path="/reception/*"
           element={
             <ProtectedRoute allowedRoles={["receptionist"]}>
               <AdminRoutes />
