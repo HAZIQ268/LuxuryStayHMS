@@ -128,7 +128,9 @@ export default function Users() {
       <div className="card p-3 mb-3 shadow-sm border-0">
         <form onSubmit={handleSubmit} className="row g-2">
           <div className="col-md-3">
+            <label htmlFor="nameInput" className="form-label">Name</label>
             <input
+              id="nameInput"
               className="form-control"
               placeholder="Name"
               value={form.name}
@@ -137,7 +139,9 @@ export default function Users() {
             />
           </div>
           <div className="col-md-3">
+            <label htmlFor="emailInput" className="form-label">Email</label>
             <input
+              id="emailInput"
               className="form-control"
               placeholder="Email"
               type="email"
@@ -147,7 +151,9 @@ export default function Users() {
             />
           </div>
           <div className="col-md-2">
+            <label htmlFor="passwordInput" className="form-label">Password</label>
             <input
+              id="passwordInput"
               className="form-control"
               placeholder="Password"
               type="password"
@@ -157,7 +163,9 @@ export default function Users() {
             />
           </div>
           <div className="col-md-2">
+            <label htmlFor="roleSelect" className="form-label">Role</label>
             <select
+              id="roleSelect"
               className="form-control"
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
@@ -170,7 +178,9 @@ export default function Users() {
             </select>
           </div>
           <div className="col-md-2">
+            <label htmlFor="contactInput" className="form-label">Contact</label>
             <input
+              id="contactInput"
               className="form-control"
               placeholder="Contact"
               value={form.contact}

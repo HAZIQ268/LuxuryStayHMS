@@ -72,36 +72,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// -------------------------------------------------
-// ⭐ GET STAFF USERS (used in your PermissionsPage)
-// -------------------------------------------------
-router.get('/staff', async (req, res) => {
-  try {
-    const users = await User.find({
-      role: { $ne: 'user' } // all staff except customers
-    });
-
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching staff', error });
-  }
-});
-
-// -------------------------------------------------
-// ⭐ UPDATE PERMISSIONS — (matches your UI PUT route)
-// -------------------------------------------------
-router.put('/:id/permissions', async (req, res) => {
-  try {
-    const { permissions } = req.body;
-
-    await User.findByIdAndUpdate(req.params.id, { permissions });
-
-    res.json({ message: 'Permissions updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating permissions', error });
-  }
-});
-
 // -------------------------------
 // GET ALL USERS
 // -------------------------------
@@ -123,6 +93,59 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting user', error });
+  }
+});
+
+// -------------------------------
+// UPDATE USER (name, email, role, contact, password)
+// -------------------------------
+router.put('/:id', async (req, res) => {
+  try {
+    const { name, email, role, contact, password } = req.body;
+
+    const updateData = { name, email, role, contact };
+
+    if (password) {
+      const hashed = await bcrypt.hash(password, 10);
+      updateData.password = hashed;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'User updated successfully', user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error });
+  }
+});
+
+// -------------------------------
+// GET STAFF USERS (used in your PermissionsPage)
+// -------------------------------
+router.get('/staff', async (req, res) => {
+  try {
+    const users = await User.find({
+      role: { $ne: 'user' } // all staff except customers
+    });
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching staff', error });
+  }
+});
+
+// -------------------------------
+// UPDATE PERMISSIONS — (matches your UI PUT route)
+// -------------------------------
+router.put('/:id/permissions', async (req, res) => {
+  try {
+    const { permissions } = req.body;
+
+    await User.findByIdAndUpdate(req.params.id, { permissions });
+
+    res.json({ message: 'Permissions updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating permissions', error });
   }
 });
 

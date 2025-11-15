@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
 
 function Navbar() {
+  const { isGuest, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    // Mobile nav toggle logic
     const mobileToggle = document.querySelector(".mobile-nav-toggle");
     const navMenu = document.querySelector("#navmenu");
 
@@ -19,9 +22,16 @@ function Navbar() {
     }
   }, []);
 
+  // ⭐ Guest to Login (Back To Login)
+  const handleBackToLogin = () => {
+    localStorage.removeItem("guest");
+    logout(); // safely remove all guest data
+    navigate("/login");
+  };
+
   return (
     <header id="header" className="header sticky-top">
-      {/* 🔹 Top Bar */}
+      {/* Topbar */}
       <div className="topbar d-flex align-items-center dark-background">
         <div className="container d-flex justify-content-between">
           <div className="contact-info d-flex align-items-center">
@@ -42,35 +52,24 @@ function Navbar() {
         </div>
       </div>
 
-      {/* 🔹 Main Navbar */}
+      {/* Navbar */}
       <div className="branding d-flex align-items-center">
         <div className="container d-flex justify-content-between align-items-center">
+
           <Link to="/" className="logo d-flex align-items-center text-decoration-none">
             <h1 className="sitename mb-0">LuxuryStay</h1>
           </Link>
 
           <nav id="navmenu" className="navmenu">
             <ul>
-              <li>
-                <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink>
-              </li>
-              <li>
-                <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>About</NavLink>
-              </li>
-              <li>
-                <NavLink to="/rooms" className={({ isActive }) => (isActive ? "active" : "")}>Rooms</NavLink>
-              </li>
-              <li>
-                <NavLink to="/amenities" className={({ isActive }) => (isActive ? "active" : "")}>Amenities</NavLink>
-              </li>
-              <li>
-                <NavLink to="/location" className={({ isActive }) => (isActive ? "active" : "")}>Location</NavLink>
-              </li>
+              <li><NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink></li>
+              <li><NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>About</NavLink></li>
+              <li><NavLink to="/rooms" className={({ isActive }) => (isActive ? "active" : "")}>Rooms</NavLink></li>
+              <li><NavLink to="/amenities" className={({ isActive }) => (isActive ? "active" : "")}>Amenities</NavLink></li>
+              <li><NavLink to="/location" className={({ isActive }) => (isActive ? "active" : "")}>Location</NavLink></li>
 
               <li className="dropdown">
-                <a href="#">
-                  <span>Pages</span> <i className="bi bi-chevron-down"></i>
-                </a>
+                <a href="#"><span>Pages</span> <i className="bi bi-chevron-down"></i></a>
                 <ul>
                   <li><NavLink to="/room-details">Room Details</NavLink></li>
                   <li><NavLink to="/restaurant">Restaurant</NavLink></li>
@@ -80,38 +79,71 @@ function Navbar() {
                 </ul>
               </li>
 
-              <li>
-                <NavLink to="/contact" className={({ isActive }) => (isActive ? "active" : "")}>Contact</NavLink>
-              </li>
-              <li>
-                <NavLink to="/feedback" className={({ isActive }) => (isActive ? "active" : "")}>Feedback</NavLink>
-              </li>
+              <li><NavLink to="/contact" className={({ isActive }) => (isActive ? "active" : "")}>Contact</NavLink></li>
+              <li><NavLink to="/feedback" className={({ isActive }) => (isActive ? "active" : "")}>Feedback</NavLink></li>
 
+              {/* ⭐ LOGIN / REGISTER / GUEST MODE AREA */}
               <li className="ms-3 d-flex gap-2">
-                <Link
-                  to="/login"
-                  className="btn btn-sm px-3 py-2"
-                  style={{ backgroundColor: "#c59d5f", color: "#fff", borderRadius: "10px" }}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="btn btn-sm px-3 py-2"
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "1px solid #c59d5f",
-                    color: "#c59d5f",
-                    borderRadius: "10px",
-                  }}
-                >
-                  Register
-                </Link>
-              </li>
 
+                {/* ⭐ If guest → show clickable Back to Login + register stays */}
+                {isGuest ? (
+                  <>
+                    <button
+                      onClick={handleBackToLogin}
+                      className="btn btn-sm px-3 py-2 d-flex align-items-center gap-2"
+                      style={{
+                        backgroundColor: "#333",
+                        border: "1px solid #c59d5f",
+                        color: "#c59d5f",
+                        borderRadius: "10px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      <i className="fa-solid fa-user-secret"></i>
+                      Active Guest Mode
+                    </button>
+
+                    <Link
+                      to="/register"
+                      className="btn btn-sm px-3 py-2"
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "1px solid #c59d5f",
+                        color: "#c59d5f",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      Register
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="btn btn-sm px-3 py-2"
+                      style={{ backgroundColor: "#c59d5f", color: "#fff", borderRadius: "10px" }}
+                    >
+                      Login
+                    </Link>
+
+                    <Link
+                      to="/register"
+                      className="btn btn-sm px-3 py-2"
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "1px solid #c59d5f",
+                        color: "#c59d5f",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
+
+              </li>
             </ul>
 
-            {/* Mobile nav toggle button */}
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
         </div>

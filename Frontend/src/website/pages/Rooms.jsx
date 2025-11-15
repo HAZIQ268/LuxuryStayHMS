@@ -4,82 +4,52 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 function Rooms() {
-  const [rooms, ] = useState([
-    {
-      id: 1,
-      name: "Deluxe Ocean Suite",
-      price: 299,
-      type: "Premium",
-      capacity: 4,
-      view: "sea",
-      image: "images/hotel/room-1.webp",
-      desc: "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod.",
-    },
-    {
-      id: 2,
-      name: "Garden View Family Room",
-      price: 189,
-      type: "Family",
-      capacity: 6,
-      view: "garden",
-      image: "images/hotel/room-3.webp",
-      desc: "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi.",
-    },
-    {
-      id: 3,
-      name: "Executive Business Room",
-      price: 159,
-      type: "Business",
-      capacity: 2,
-      view: "city",
-      image: "images/hotel/room-5.webp",
-      desc: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
-    },
-    {
-      id: 4,
-      name: "Classic City View",
-      price: 129,
-      type: "Standard",
-      capacity: 2,
-      view: "city",
-      image: "images/hotel/room-7.webp",
-      desc: "At vero eos et accusamus et iusto odio dignissimos ducimus.",
-    },
-    {
-      id: 5,
-      name: "Luxury Presidential Suite",
-      price: 549,
-      type: "Luxury",
-      capacity: 8,
-      view: "sea",
-      image: "images/hotel/room-9.webp",
-      desc: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
-    },
-    {
-      id: 6,
-      name: "Romantic Honeymoon Suite",
-      price: 339,
-      type: "Romance",
-      capacity: 2,
-      view: "garden",
-      image: "images/hotel/room-11.webp",
-      desc: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit.",
-    },
-  ]);
+  const [rooms, setRooms] = useState([]);
+  const [filteredRooms, setFilteredRooms] = useState([]);
+  const [filters, setFilters] = useState({ price: "", capacity: "", view: "", sort: "" });
 
-  const [filters, setFilters] = useState({
-    price: "",
-    capacity: "",
-    view: "",
-    sort: "",
-  });
+  // Backend URL for images
+  const BACKEND_URL = "http://localhost:5000";
 
-  const [filteredRooms, setFilteredRooms] = useState(rooms);
+  // ---------------------------
+  // Fetch Rooms From Backend
+  // ---------------------------
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/rooms`);
+        const data = await res.json();
 
+        const formatted = data.map((r) => ({
+          id: r._id, // use MongoDB ID for unique key
+          room_id: r.room_id,
+          name: r.title || r.type,                 // Room title
+          price: r.price,
+          type: r.type,
+          capacity: r.capacity || 2,
+          view: r.view || "sea",
+          image: r.image ? `${BACKEND_URL}/uploads/${r.image}` : `${BACKEND_URL}/uploads/default.png`,
+          desc: r.description || "Comfortable room with excellent service.",
+        }));
+
+        setRooms(formatted);
+        setFilteredRooms(formatted);
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
+  // Initialize AOS
   useEffect(() => {
     AOS.init({ duration: 800 });
   }, []);
 
+  // ---------------------------
+  // Apply Filters & Sorting
+  // ---------------------------
   useEffect(() => {
     let result = [...rooms];
 
@@ -99,14 +69,12 @@ function Rooms() {
     }
 
     // View filter
-    if (filters.view) {
-      result = result.filter((r) => r.view === filters.view);
-    }
+    if (filters.view) result = result.filter((r) => r.view === filters.view);
 
     // Sorting
     if (filters.sort === "price-low") result.sort((a, b) => a.price - b.price);
     else if (filters.sort === "price-high") result.sort((a, b) => b.price - a.price);
-    else if (filters.sort === "popularity") result.sort((a, b) => a.id - b.id); // dummy sort
+    else if (filters.sort === "popularity") result.sort((a, b) => a.room_id - b.room_id);
 
     setFilteredRooms(result);
   }, [filters, rooms]);
@@ -149,6 +117,7 @@ function Rooms() {
                       <option value="200-300">$200 - $300</option>
                       <option value="over-300">Over $300</option>
                     </select>
+
                     <select name="capacity" className="filter-select" onChange={handleFilterChange}>
                       <option value="">Capacity</option>
                       <option value="1">1 Guest</option>
@@ -156,6 +125,7 @@ function Rooms() {
                       <option value="4">4 Guests</option>
                       <option value="6">6+ Guests</option>
                     </select>
+
                     <select name="view" className="filter-select" onChange={handleFilterChange}>
                       <option value="">View Type</option>
                       <option value="sea">Sea View</option>
@@ -165,6 +135,7 @@ function Rooms() {
                   </div>
                 </div>
               </div>
+
               <div className="col-lg-4 col-md-5">
                 <div className="sort-options">
                   <span className="sort-label">Sort by:</span>
@@ -183,28 +154,24 @@ function Rooms() {
             <div className="row gy-4">
               {filteredRooms.length > 0 ? (
                 filteredRooms.map((room, index) => (
-                  <div
-                    className="col-xl-4 col-lg-6"
-                    key={room.id}
-                    data-aos="fade-up"
-                    data-aos-delay={100 * (index + 1)}
-                  >
+                  <div className="col-xl-4 col-lg-6" key={room.id} data-aos="fade-up" data-aos-delay={100 * (index + 1)}>
                     <div className="room-card">
                       <div className="room-image">
                         <img src={room.image} alt={room.name} className="img-fluid" />
                         <div className="room-badge">{room.type}</div>
-                        <div className="room-price">
-                          ${room.price}<span>/night</span>
-                        </div>
+                        <div className="room-price">${room.price}<span>/night</span></div>
                       </div>
+
                       <div className="room-content">
                         <h4>{room.name}</h4>
                         <p className="room-description">{room.desc}</p>
+
                         <div className="room-features">
                           <span><i className="bi bi-people"></i> {room.capacity} Guests</span>
                           <span><i className="bi bi-wifi"></i> Free WiFi</span>
                           <span><i className="bi bi-tv"></i> Smart TV</span>
                         </div>
+
                         <div className="room-actions">
                           <Link to={`/room/${room.id}`} className="btn-view-details">View Details</Link>
                           <Link to="/booking" className="btn-book-now">Check Availability</Link>

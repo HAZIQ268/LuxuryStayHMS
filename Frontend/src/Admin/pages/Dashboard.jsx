@@ -1,6 +1,203 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+// 
+// ⭐ CHARTS KE LIYE NAYE IMPORTS
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, BarElement } from "chart.js";
+import { Doughnut, Bar } from "react-chartjs-2";
 
+// Chart.js ko register karna zaroori hai
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  BarElement
+);
+// 
+
+// ==========================================================
+// ⭐️ CUSTOM PLUGIN FOR DONUT CHART: Center Text (Updated for Total Rooms)
+// ==========================================================
+const centerTextPlugin = {
+  id: 'centerText',
+  beforeDraw: (chart) => {
+    if (chart.config.type === 'doughnut') {
+      const { width, height, ctx } = chart;
+      ctx.restore();
+      // Total Available + Total Booked = Total Inventory Rooms
+      const totalBooked = chart.data.datasets[0].data[0];
+      const totalAvailable = chart.data.datasets[0].data[1];
+      const totalRooms = totalBooked + totalAvailable;
+      
+      const fontSize = (height / 114).toFixed(2);
+      ctx.font = `bold ${fontSize}em sans-serif`;
+      ctx.textBaseline = "middle";
+      const text = `${totalRooms}`;
+      const textX = Math.round((width - ctx.measureText(text).width) / 2);
+      const textY = height / 2;
+      ctx.fillStyle = '#333';
+      ctx.fillText(text, textX, textY - 15);
+      
+      // Secondary text (Title)
+      ctx.font = `${(fontSize * 0.4).toFixed(2)}em sans-serif`;
+      const subText = 'Total Rooms'; // Title updated
+      const subTextX = Math.round((width - ctx.measureText(subText).width) / 2);
+      ctx.fillStyle = '#666';
+      ctx.fillText(subText, subTextX, textY + 15);
+      
+      ctx.save();
+    }
+  }
+};
+
+// ==========================================================
+// ⭐️ COMPONENT 1: ROOM OCCUPANCY PIE CHART (New Component Logic)
+// ==========================================================
+const RoomOccupancyPieChart = ({ bookedRooms, availableRooms }) => {
+    // Total Booked Rooms (Pending + Done + Finish)
+    const totalBooked = bookedRooms.pending + bookedRooms.done + bookedRooms.finish;
+    
+    const data = {
+        labels: ['Booked Rooms', 'Available Rooms'],
+        datasets: [
+            {
+                label: 'Rooms Count',
+                data: [totalBooked, availableRooms],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.9)', // Greenish for Booked
+                    'rgba(255, 159, 64, 0.9)', // Orange/Yellow for Available
+                ],
+                borderColor: [
+                    '#fff',
+                    '#fff',
+                ],
+                borderWidth: 2,
+                hoverBorderColor: '#000',
+            },
+        ],
+    };
+
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%', // Donut style
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    boxWidth: 10,
+                    padding: 20,
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        let label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed !== null) {
+                            // Calculate percentage
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const value = context.parsed;
+                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                            label += `${value} (${percentage}%)`;
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+
+    return (
+        <div className="card h-100">
+            <div className="card-header border-0 pb-0">
+                <h4 className="card-title">Room Occupancy Overview</h4>
+            </div>
+            <div className="card-body" style={{ height: '350px', position: 'relative' }}>
+                <Doughnut data={data} options={options} plugins={[centerTextPlugin]} />
+            </div>
+        </div>
+    );
+};
+
+// ==========================================================
+// ⭐️ COMPONENT 2: BOOKING STATUS BAR CHART (Existing)
+// ==========================================================
+const BookingBarChart = ({ newBookings, checkIns, checkOuts }) => {
+  
+  const data = {
+    labels: ['New Bookings', 'Check Ins', 'Check Outs'],
+    datasets: [
+      {
+        label: 'Daily Count',
+        data: [newBookings, checkIns, checkOuts],
+        backgroundColor: [
+          'rgba(255, 159, 64, 0.8)', // Orange
+          'rgba(153, 102, 255, 0.8)', // Purple
+          'rgba(255, 205, 86, 0.8)', // Yellow
+        ],
+        borderColor: [
+          'rgba(255, 159, 64, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 205, 86, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+            display: true,
+            text: 'Number of Actions'
+        },
+        ticks: {
+            stepSize: 1,
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="card h-100">
+      <div className="card-header border-0 pb-0">
+        <h4 className="card-title">Daily Operation Summary</h4>
+      </div>
+      <div className="card-body" style={{ height: '350px' }}>
+        <Bar data={data} options={options} />
+      </div>
+    </div>
+  );
+};
+
+
+// ==========================================================
+// ⭐️ MAIN DASHBOARD COMPONENT (Updated)
+// ==========================================================
 function Dashboard() {
   const [stats, setStats] = useState({
     newBookings: 0,
@@ -73,7 +270,6 @@ function Dashboard() {
       {/* ================= ROLE BASED CARDS ================= */}
 
       <div className="row">
-
         {/* Admin + Manager + Receptionist → NEW BOOKINGS */}
         {(role === "admin" || role === "manager" || role === "receptionist") && (
           <StatCard
@@ -113,67 +309,34 @@ function Dashboard() {
             icon={<svg width="58" height="58"><path fill="white" d="M8...Z" /></svg>}
           />
         )}
-
       </div>
 
-      {/* ================= ROOMS SECTION ================= */}
+      {/* ================= CHARTS AND ROOMS SECTION (Updated Layout) ================= */}
 
-      {(role === "admin" || role === "manager" || role === "housekeeping") && (
+      {(role === "admin" || role === "manager" || role === "housekeeping" || role === "user") && (
         <div className="row">
-          <div className="col-xl-3 col-xxl-4">
-            <div className="card text-center">
-              <div className="card-body">
-                <h2>{stats.availableRooms}</h2>
-                <span className="fs-16 text-black">Available Rooms Today</span>
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="card-header border-0 pb-0">
-                <h4 className="mb-0">Booked Room Status</h4>
-              </div>
-
-              <div className="card-body">
-                {["pending", "done", "finish"].map((status, i) => (
-                  <div key={i} className="d-flex justify-content-between mb-3">
-                    <span className="fw-bold text-capitalize">{status}</span>
-                    <span>{stats.bookedRooms?.[status] ?? 0}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* ================= REVIEWS SECTION ================= */}
-
-          {(role === "admin" || role === "manager" || role === "user") && (
-            <div className="col-xl-9 col-xxl-8">
-              <div className="card">
-                <div className="card-header border-0">
-                  <h4 className="card-title">Latest Customer Reviews</h4>
-                </div>
-
-                <div className="card-body p-0 dz-scroll" style={{ maxHeight: 400 }}>
-                  {stats.reviews.length > 0 ? (
-                    stats.reviews.map((r, i) => (
-                      <div key={i} className="dz-review-bx p-3 border-bottom">
-                        <div className="d-flex align-items-center mb-2">
-                          <img src={r.avatar || "/admin-images/avatar/1.jpg"} width="45" className="rounded me-3" />
-                          <div>
-                            <h6>{r.name}</h6>
-                            <small>{new Date(r.createdAt).toLocaleDateString()}</small>
-                          </div>
-                        </div>
-                        <p>{r.comment}</p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center py-4 text-muted">No reviews yet</p>
-                  )}
-                </div>
-              </div>
+          
+          {/* ⭐️ CHART 1: Room Occupancy Pie Chart (Available vs Booked) */}
+          {(role === "admin" || role === "manager" || role === "housekeeping") && (
+            <div className="col-xl-6 col-xxl-6">
+              <RoomOccupancyPieChart 
+                bookedRooms={stats.bookedRooms} 
+                availableRooms={stats.availableRooms} 
+              />
             </div>
           )}
+
+          {/* ⭐️ CHART 2: Booking Status Bar Chart (New) */}
+          {(role === "admin" || role === "manager" || role === "receptionist") && (
+            <div className="col-xl-6 col-xxl-6">
+              <BookingBarChart 
+                newBookings={stats.newBookings}
+                checkIns={stats.checkIns}
+                checkOuts={stats.checkOuts}
+              />
+            </div>
+          )}
+
         </div>
       )}
     </>
